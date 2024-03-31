@@ -55,7 +55,7 @@ def get_next_id():
 # region endpoints
 
 ## show swagger page to start
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def show_docs():
     return RedirectResponse(url="/docs")
 
@@ -63,12 +63,18 @@ def show_docs():
 ## GET lista de contactos
 @app.get('/contactos', response_model=List[Contacto], response_model_exclude_none=True)
 def get_all():
+    """
+    Obtiene la lista completa de contactos
+    """
     return contactos
 
 
 ## GET contacto por id
 @app.get('/contactos/{id}', response_model=Contacto)
 def get_contacto(id: int):
+    """
+    Devuelve la información completa para un Contacto específico
+    """
     contacto, index = buscar_contacto(id)
     return contacto
 
@@ -76,6 +82,9 @@ def get_contacto(id: int):
 ## POST crear contacto nuevo
 @app.post('/contactos', response_model=Contacto, status_code=201)
 def agregar(data: ContactoSinId):
+    """
+    Agrega un Contacto
+    """
     c = Contacto(**data.model_dump(exclude_none=True))
     contactos.append(c)
     return c
@@ -84,6 +93,9 @@ def agregar(data: ContactoSinId):
 ## PUT actualizar contacto existente
 @app.put('/contactos/{id}', response_model=Contacto)
 def editar(id: int, data: ContactoSinId):
+    """
+    Actualizar datos de un Contacto existente
+    """
     c, i = buscar_contacto(id)
     c = c.model_copy(update=data.model_dump(exclude_unset=True))
     contactos[i] = c
@@ -93,6 +105,9 @@ def editar(id: int, data: ContactoSinId):
 ## DELETE borrar contacto
 @app.delete('/contactos/{id}')
 def borrar(id: int):
+    """
+    Borrar un Contacto existente
+    """
     c, i = buscar_contacto(id)
     contactos.remove(c)
     # segun la especificacion, al borrar un elemento hay que devolver 204 y ningun dato
