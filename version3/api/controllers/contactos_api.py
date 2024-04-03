@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from data.database import get_db
-from data.repositorios.contactos_repo import ContactosRepository
+from data.repositories.contactos_repo import ContactosRepository
 from domain.Contactos import Contacto, ContactoSinId
 
 

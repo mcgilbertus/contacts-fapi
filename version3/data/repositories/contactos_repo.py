@@ -1,7 +1,7 @@
 from sqlalchemy import select, column
 from sqlalchemy.orm import Session
 
-from data.modelos.modelos_bd import ContactoBd
+from data.entities.modelos_bd import ContactoBd
 from domain.Contactos import ContactoSinId
 
 
