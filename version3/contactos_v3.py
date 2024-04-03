@@ -5,10 +5,8 @@ from data import database
 
 # importamos el modulo para que sqlalchemy tenga registrados los modelos al crear las tablas
 from api.controllers.contactos_api import contactos_router
-
 # crear todas las tablas que no existan ya
-# database.create_all()
-# reemplazado por Alembic para implementar migraciones
+database.create_all()
 
 app = FastAPI()
 

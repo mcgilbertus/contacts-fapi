@@ -12,7 +12,7 @@ contactos_router = APIRouter(prefix='/contactos')
 repo = ContactosRepository()
 
 
-@contactos_router.get('/', response_model=List[Contacto])
+@contactos_router.get('/', response_model=List[Contacto], response_model_exclude_none=True)
 def get_all(db: Session = Depends(get_db)):
     return repo.get_all(db)
 
