@@ -2,13 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from api.controllers.contactos_api import contactos_router
-
-app = FastAPI(
-    title='Contactos v2',
-    description='Aplicación demo de FastAPI v2',
-    version="2.0",
-)
+app = FastAPI()
 
 
 @app.get("/", include_in_schema=False)
