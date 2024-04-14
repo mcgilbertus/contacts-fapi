@@ -1,7 +1,9 @@
 from typing import List
+
 from fastapi import APIRouter, Response, status
+
 from data.repositories.contactos_repo import ContactosRepo
-from domain.model.Contactos import Contacto, ContactoSinId
+from domain.model.contactos import Contacto, ContactoSinId
 
 contactos_router = APIRouter(prefix='/contactos')
 
