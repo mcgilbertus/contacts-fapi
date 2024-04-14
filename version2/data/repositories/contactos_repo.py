@@ -1,7 +1,6 @@
 import datetime
 
-from fastapi import HTTPException, status
-
+from domain.exceptions.NotFound import NotFoundError
 from domain.model.contactos import Contacto, ContactoSinId
 
 
@@ -9,6 +8,7 @@ class ContactosRepo:
     """
     Repositorio de contactos -en memoria, en esta versión
     """
+
     def __init__(self):
         """
         Inicializa el repositorio con algunos contactos de prueba
@@ -17,7 +17,8 @@ class ContactosRepo:
                           Contacto(id=2, nombre='Contacto2', direccion='dir2'),
                           Contacto(id=3, nombre='Contacto3')]
 
-    def buscar_contacto(self, id:int) -> (Contacto, int):
+    # region Métodos suplementarios
+    def buscar_contacto(self, id: int) -> (Contacto, int):
         """
         Busca un contacto por id
         :param id: int. Id del contacto a buscar
@@ -26,7 +27,7 @@ class ContactosRepo:
         """
         i, c = next(((i, c) for i, c in enumerate(self.contactos) if c.id == id), (None, None))
         if c is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contacto no encontrado")
+            raise NotFoundError("Contacto no encontrado")
         return c, i
 
     def get_next_id(self) -> int:
@@ -40,6 +41,9 @@ class ContactosRepo:
                 new_id = c.id + 1
         return new_id
 
+    # endregion
+
+    # region Métodos CRUD
     def get_all(self) -> list[Contacto]:
         """
         Devuelve la lista completa de contactos
@@ -47,16 +51,16 @@ class ContactosRepo:
         """
         return self.contactos
 
-    def get_by_id(self, id: int)-> Contacto:
+    def get_by_id(self, id: int) -> Contacto:
         """
         Busca un contacto por id
         :param id: int. El id a buscar
         :return: Contacto. El contacto encontrado.
-                 Si no se encuentra, el método buscar_contacto lanzará una excepción HTTP con código 404
+                 Si no se encuentra, el método buscar_contacto lanzará una excepción NotFoundError
         """
         return self.buscar_contacto(id)
 
-    def agregar(self, data: ContactoSinId)-> Contacto:
+    def agregar(self, data: ContactoSinId) -> Contacto:
         """
         Agrega un nuevo contacto a la lista
         :param data: ContactoSinId. Datos del contacto a agregar. El id se asignará automáticamente
@@ -67,7 +71,7 @@ class ContactosRepo:
         self.contactos.append(c)
         return c
 
-    def editar(self, id: int, data: ContactoSinId)-> Contacto:
+    def editar(self, id: int, data: ContactoSinId) -> Contacto:
         """
         Reemplaza los valores de un contacto existente por los nuevos valores
         :param id: int. Id del contacto a editar
@@ -79,7 +83,7 @@ class ContactosRepo:
         self.contactos[i] = c
         return c
 
-    def borrar(self, id: int)-> None:
+    def borrar(self, id: int) -> None:
         """
         Borra un contacto de la lista
         :param id: int. Id del contacto a borrar
@@ -88,3 +92,4 @@ class ContactosRepo:
         """
         c, i = self.buscar_contacto(id)
         self.contactos.remove(c)
+    # endregion
