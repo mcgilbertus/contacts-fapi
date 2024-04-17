@@ -6,19 +6,19 @@ from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contactos import Contacto, ContactoSinId
 
-contactos_router = APIRouter(prefix='/contactos')
+contactos_router = APIRouter(prefix='/contactos', tags=['Contactos'])
 
 repo = ContactosRepo()
 
 
 ## GET lista de contactos
-@contactos_router.get('/contactos', response_model=List[Contacto], response_model_exclude_none=True)
+@contactos_router.get('/', response_model=List[Contacto], response_model_exclude_none=True)
 def get_all():
     return repo.get_all()
 
 
 ## GET contacto por id
-@contactos_router.get('/contactos/{id}', response_model=Contacto)
+@contactos_router.get('/{id}', response_model=Contacto)
 def get_contacto(id: int):
     try:
         contacto, index = repo.buscar_contacto(id)
@@ -28,13 +28,13 @@ def get_contacto(id: int):
 
 
 ## POST crear contacto nuevo
-@contactos_router.post('/contactos', response_model=Contacto, status_code=201)
+@contactos_router.post('/', response_model=Contacto, status_code=201)
 def agregar(data: ContactoSinId):
     return repo.agregar(data)
 
 
 ## PUT actualizar contacto existente
-@contactos_router.put('/contactos/{id}', response_model=Contacto)
+@contactos_router.put('/{id}', response_model=Contacto)
 def editar(id: int, data: ContactoSinId):
     try:
         return repo.editar(id, data)
@@ -43,7 +43,7 @@ def editar(id: int, data: ContactoSinId):
 
 
 ## DELETE borrar contacto
-@contactos_router.delete('/contactos/{id}')
+@contactos_router.delete('/{id}')
 def borrar(id: int):
     try:
         repo.borrar(id)

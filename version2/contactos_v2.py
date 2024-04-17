@@ -11,11 +11,13 @@ app = FastAPI(
 )
 
 
+# redirección a la documentación por defecto
 @app.get("/", include_in_schema=False)
 def show_docs():
     return RedirectResponse(url="/docs")
 
 
+# incluir todas las rutas de contactos
 app.include_router(contactos_router)
 
 if __name__ == '__main__':
