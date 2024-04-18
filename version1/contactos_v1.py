@@ -81,7 +81,7 @@ def get_contacto(id: int):
 
 
 ## POST crear contacto nuevo
-@app.post('/contactos', response_model=Contacto, status_code=201)
+@app.post('/contactos', response_model=Contacto, status_code=201, response_model_exclude_none=True)
 def agregar(data: ContactoSinId):
     """
     Agrega un Contacto
