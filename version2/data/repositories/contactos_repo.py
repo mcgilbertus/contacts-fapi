@@ -58,7 +58,7 @@ class ContactosRepo:
         :return: Contacto. El contacto encontrado.
                  Si no se encuentra, el método buscar_contacto lanzará una excepción NotFoundError
         """
-        return self.buscar_contacto(id)
+        return self.buscar_contacto(id)[0]
 
     def agregar(self, data: ContactoSinId) -> Contacto:
         """
