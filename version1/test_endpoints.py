@@ -18,7 +18,7 @@ def test_getAll_devuelveLista(test_client):
     assert response.status_code == 200
     data = response.json()
     assert len(data) == len(contactos)
-    # verifica que se recibieron todos los contactos almacenados, con los mismos valores -usando DeepDiff
+    # verifica que se recibieron todos los contactos almacenados, con los mismos valores
     for i, c in enumerate(data):
         assert busca_contacto_y_compara(c)
 
@@ -56,7 +56,8 @@ def test_agregarContacto_validationErrors_return422(test_client):
     assert error_details[0]['loc'][1] == 'nombre'
     assert error_details[0]['msg'] == 'Field required'
     assert error_details[1]['loc'][1] == 'fecha_nac'
-    assert error_details[1]['msg'] == 'Input should be a valid date or datetime, invalid character in year'
+    assert error_details[1]['msg'] == ('Input should be a valid date or datetime, '
+                                       'invalid character in year')
 
 
 def test_editarContacto_todoBien_devuelveContacto(test_client):
@@ -77,7 +78,8 @@ def test_editarContacto_validationErrors_return422(test_client):
     assert error_details[0]['loc'][1] == 'nombre'
     assert error_details[0]['msg'] == 'Field required'
     assert error_details[1]['loc'][1] == 'fecha_nac'
-    assert error_details[1]['msg'] == 'Input should be a valid date or datetime, invalid character in year'
+    assert error_details[1]['msg'] == ('Input should be a valid date or datetime, '
+                                       'invalid character in year')
 
 
 def test_borrar_idCorrecto_devuelve204(test_client):
