@@ -5,7 +5,7 @@ from data.entities.modelos_bd import ContactoBd
 from domain.Contactos import ContactoSinId
 
 
-class ContactosRepository:
+class ContactosRepo:
     def get_all(self, db: Session):
         return db.query(ContactoBd).all()
 

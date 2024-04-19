@@ -5,12 +5,16 @@ from pydantic import BaseModel, Field
 
 
 class ContactoSinId(BaseModel):
-    nombre: Annotated[str, Field(..., description='Nombre y apellido del contacto', max_length=80)]
-    direccion: Annotated[str, Field(description='Direccion completa (calle, nro, piso, depto, ciudad, etc)', max_length=120)] = None
-    telefonos: Annotated[str, Field(description='Todos los números de teléfono del contacto', max_length=50)] = None
-    fecha_nac: Annotated[datetime.date, Field(description='Fecha de nacimiento')] = None
+    nombre: str = Field(..., max_length=80,
+        description='Nombre y apellido del contacto')
+    direccion: str = Field(default=None, max_length=120,
+        description='Direccion completa (calle, nro, piso, depto, ciudad, etc)')
+    telefonos: str = Field(default=None, max_length=50,
+        description='Todos los números de teléfono del contacto')
+    fecha_nac: datetime.date = Field(default=None,
+        description='Fecha de nacimiento')
 
 
 # modelo completo: todo lo de la base mas el id. Para GET y almacenamiento
 class Contacto(ContactoSinId):
-    id: Annotated[int, Field(gt=0)]
+    id: int = Field(gt=0)

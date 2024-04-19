@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from data.database import get_db
-from data.repositories.contactos_repo import ContactosRepository
+from data.repositories.contactos_repo import ContactosRepo
 from domain.Contactos import Contacto, ContactoSinId
 
 
 contactos_router = APIRouter(prefix='/contactos')
-repo = ContactosRepository()
+repo = ContactosRepo()
 
 
 @contactos_router.get('/', response_model=List[Contacto], response_model_exclude_none=True)
