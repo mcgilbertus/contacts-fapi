@@ -1,12 +1,15 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-from data import database
 
 # importamos el modulo para que sqlalchemy tenga registrados los modelos al crear las tablas
 from api.controllers.contactos_api import contactos_router
+from data import database
+
+# crea la instancia de Database para trabajar con la bd 'normal' (no de testing)
+database.create_db_prod()
 # crear todas las tablas que no existan ya
-database.create_all()
+database.db_instance.create_all()
 
 app = FastAPI()
 
