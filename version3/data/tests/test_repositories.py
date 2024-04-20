@@ -45,7 +45,7 @@ def test_agregar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
 # region editar
 def test_editar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
     payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
-    data = repo.actualizar(db, 1, payload)
+    data = repo.editar(db, 1, payload)
     assert busca_contacto_y_compara(db, data, repo)
 
 

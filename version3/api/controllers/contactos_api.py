@@ -35,7 +35,7 @@ def agregar(data: ContactoSinId, db: Session = Depends(db_instance.get_db)):
 @contactos_router.put('/{id}', response_model=Contacto)
 def editar(id: int, datos: ContactoSinId, db: Session = Depends(db_instance.get_db)):
     try:
-        c = repo.actualizar(db, id, datos)
+        c = repo.editar(db, id, datos)
         return c
     except NotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contacto no encontrado")
