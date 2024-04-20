@@ -22,7 +22,7 @@ def test_getById_idCorrecto_devuelveContacto(repo: ContactosRepo):
     assert busca_contacto_y_compara(data, repo)
 
 
-def test_getContacto_idIncorrecto_notFoundError(repo: ContactosRepo):
+def test_getById_idIncorrecto_notFoundError(repo: ContactosRepo):
     with pytest.raises(NotFoundError):
         repo.get_by_id(99)
 

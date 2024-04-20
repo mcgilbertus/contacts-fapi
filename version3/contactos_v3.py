@@ -4,12 +4,10 @@ from fastapi.responses import RedirectResponse
 
 # importamos el modulo para que sqlalchemy tenga registrados los modelos al crear las tablas
 from api.controllers.contactos_api import contactos_router
-from data import database
+from data.database import db_instance
 
-# crea la instancia de Database para trabajar con la bd 'normal' (no de testing)
-database.create_db_prod()
 # crear todas las tablas que no existan ya
-database.db_instance.create_all()
+db_instance.create_all()
 
 app = FastAPI()
 

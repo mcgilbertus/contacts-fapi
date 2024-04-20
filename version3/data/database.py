@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:admin123@localhost:5432/lab4_2021"
 DB_CONNECTION = "mssql+pymssql://localhost/pycontacts"
 DB_TEST_CONNECTION = "mssql+pymssql://localhost/pycontactstest"
 
 Base = declarative_base()
+
 
 class Database():
     def __init__(self, connection_string: str = DB_CONNECTION, echo: bool = True):
@@ -29,10 +29,15 @@ class Database():
             db.close()
 
 
+# by default, creates the 'prod' database instance
 db_instance = Database()
 
-def create_db_prod(with_echo: bool = True):
+
+def create_db_prod_instance(with_echo: bool = True):
+    global db_instance
     db_instance = Database(DB_CONNECTION, with_echo)
 
-def create_db_test(with_echo: bool = True):
+
+def create_db_test_instance(with_echo: bool = True):
+    global db_instance
     db_instance = Database(DB_TEST_CONNECTION, with_echo)

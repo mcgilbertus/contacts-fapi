@@ -1,64 +1,80 @@
 import pytest
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 
+from data.entities.modelos_bd import ContactoBd
 from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
-from domain.model.contactos import Contacto, ContactoSinId
-from fixtures import inicializa_datos as repo
+from domain.model.contactos import ContactoSinId
+from fixtures_data import inicializa_datos as repo, db_test as db
 
 
-# region endpoints
-def test_getAll_devuelveLista(repo: ContactosRepo):
-    data = repo.get_all()
-    assert len(data) == len(repo.contactos)
+# region get_all
+def test_getAll_devuelveLista(db: Session, repo: ContactosRepo):
+    data = repo.get_all(db)
+    assert len(data) == 3
     # verifica que se recibieron todos los contactos almacenados, con los mismos valores
     for c in data:
-        assert busca_contacto_y_compara(c, repo)
-
-
-def test_getContacto_idCorrecto_devuelveContacto(repo: ContactosRepo):
-    data = repo.get_by_id(2)
-    assert busca_contacto_y_compara(data, repo)
-
-
-def test_getContacto_idIncorrecto_devuelve404(repo: ContactosRepo):
-    with pytest.raises(NotFoundError):
-        repo.get_by_id(99)
-
-
-def test_agregarContacto_todoBien_devuelveContacto(repo: ContactosRepo):
-    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
-    data = repo.agregar(payload)
-    assert busca_contacto_y_compara(data, repo)
-
-
-def test_editarContacto_todoBien_devuelveContacto(repo: ContactosRepo):
-    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
-    data = repo.editar(1, payload)
-    assert busca_contacto_y_compara(data, repo)
-
-
-def test_borrar_idCorrecto_devuelve204(repo: ContactosRepo):
-    repo.borrar(1)
-    # verifica que el contacto no exista mas en el almacenamiento
-    with pytest.raises(NotFoundError):
-        repo.buscar_contacto(1)
-
-
-def test_borrar_idIncorrecto_devuelve404(repo: ContactosRepo):
-    with pytest.raises(NotFoundError):
-        repo.borrar(99)
+        assert busca_contacto_y_compara(db, c, repo)
 
 
 # endregion
 
+# region get_by_id
+def test_getById_idCorrecto_devuelveContacto(db: Session, repo: ContactosRepo):
+    data = repo.get_by_id(db, 2)
+    assert busca_contacto_y_compara(db, data, repo)
+
+
+def test_getById_idIncorrecto_notFoundError(db: Session, repo: ContactosRepo):
+    with pytest.raises(NotFoundError):
+        repo.get_by_id(db, 99)
+
+
+# endregion
+
+# region agregar
+def test_agregar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
+    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
+    data = repo.agregar(db, payload)
+    assert busca_contacto_y_compara(db, data, repo)
+
+
+# end region
+
+# region editar
+def test_editar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
+    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
+    data = repo.actualizar(db, 1, payload)
+    assert busca_contacto_y_compara(db, data, repo)
+
+
+# endregion
+
+# region borrar
+def test_borrar_idCorrecto_borraContacto(db: Session, repo: ContactosRepo):
+    repo.borrar(db, 1)
+    # verifica que el contacto no exista mas en el almacenamiento
+    # no se puede usar get_by_id porque el contacto esta en memoria
+    assert db.scalar(text('SELECT id FROM Contactos WHERE id = 1')) == None
+
+
+def test_borrar_idIncorrecto_notFoundError(db: Session, repo: ContactosRepo):
+    with pytest.raises(NotFoundError):
+        repo.borrar(db, 99)
+
+
+# endregion
+
+
 # region helper functions
 
-def busca_contacto_y_compara(cto: Contacto, repo: ContactosRepo) -> bool:
+def busca_contacto_y_compara(bd: Session, cto: ContactoBd, repo: ContactosRepo) -> bool:
     # busca el contacto almacenado con el mismo id
-    cto_almacenado = repo.buscar_contacto(cto.id)[0]
+    cto_almacenado = repo.get_by_id(bd, cto.id)
     # compara los dos contactos propiedad por propiedad y devuelve true si no hay diferencias
-    orig_values = cto_almacenado.model_dump()
-    for k, v in cto.model_dump().items():
+    orig_values = cto_almacenado.__dict__
+    for k, v in cto.__dict__.items():
         if orig_values[k] != v:
             return False
     return True
