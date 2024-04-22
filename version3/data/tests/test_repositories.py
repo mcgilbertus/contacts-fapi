@@ -2,10 +2,10 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from data.entities.modelos_bd import ContactoBd
+from api.model.contacto_modelos import ContactoSinIdModel
 from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
-from domain.model.contactos import ContactoSinId
+from domain.model.contacto import Contacto
 from fixtures_data import inicializa_datos as repo, db_test as db
 
 
@@ -35,7 +35,7 @@ def test_getById_idIncorrecto_notFoundError(db: Session, repo: ContactosRepo):
 
 # region agregar
 def test_agregar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
-    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
+    payload = Contacto(nombre= 'nuevo contacto', direccion= 'nueva direccion')
     data = repo.agregar(db, payload)
     assert busca_contacto_y_compara(db, data, repo)
 
@@ -44,7 +44,7 @@ def test_agregar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
 
 # region editar
 def test_editar_todoBien_devuelveContacto(db: Session, repo: ContactosRepo):
-    payload = ContactoSinId(**{'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'})
+    payload = {'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'}
     data = repo.editar(db, 1, payload)
     assert busca_contacto_y_compara(db, data, repo)
 
@@ -69,7 +69,7 @@ def test_borrar_idIncorrecto_notFoundError(db: Session, repo: ContactosRepo):
 
 # region helper functions
 
-def busca_contacto_y_compara(bd: Session, cto: ContactoBd, repo: ContactosRepo) -> bool:
+def busca_contacto_y_compara(bd: Session, cto: Contacto, repo: ContactosRepo) -> bool:
     # busca el contacto almacenado con el mismo id
     cto_almacenado = repo.get_by_id(bd, cto.id)
     # compara los dos contactos propiedad por propiedad y devuelve true si no hay diferencias

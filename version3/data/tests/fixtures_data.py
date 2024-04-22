@@ -4,7 +4,7 @@ import pytest
 
 from data.database import create_db_test_instance, db_instance
 from data.repositories.contactos_repo import ContactosRepo
-from domain.model.contactos import ContactoSinId
+from domain.model.contacto import Contacto
 
 
 @pytest.fixture(scope='function', name='db')
@@ -24,8 +24,8 @@ def inicializa_datos(db):
     porque la BD fue recreada completamente
     """
     repository = ContactosRepo()
-    repository.agregar(db, ContactoSinId(nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
-    repository.agregar(db, ContactoSinId(nombre='Contacto2', direccion='dir2'))
-    repository.agregar(db, ContactoSinId(nombre='Contacto3'))
+    repository.agregar(db, Contacto(id=1, nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
+    repository.agregar(db, Contacto(id=2, nombre='Contacto2', direccion='dir2'))
+    repository.agregar(db, Contacto(id=3, nombre='Contacto3'))
 
     return repository

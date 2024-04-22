@@ -1,8 +1,6 @@
 import datetime
 
-from pydantic import ValidationError
-
-from domain.model.contactos import Contacto
+from domain.model.contacto import Contacto
 
 
 # region validaciones
@@ -18,24 +16,12 @@ def test_instanciacionContacto_valoresCorrectos_ok():
     assert contacto.fecha_nac == datetime.date(year=1986, month=1, day=12)
 
 
-def test_instanciacionContacto_valoresIncorrectos_falla():
-    try:
-        # Pydantic convierte el string en un datetime.date
-        _ = Contacto(id=1, nombre="Juan Perez", direccion="Cucha Cucha 123",
-                     telefonos=1234, fecha_nac="1986-01-12")
-        assert False
-    except ValidationError as e:
-        assert str(e).startswith("1 validation error for Contacto\ntelefonos\n"
-                                 "  Input should be a valid string")
-    except Exception:
-        assert False
-
-
-def test_instanciacionContacto_valoresFaltantes_falla():
-    try:
-        _ = Contacto(id=1, direccion="Cucha Cucha 123", telefonos="1234567890")
-        assert False
-    except ValidationError as e:
-        assert str(e).startswith("1 validation error for Contacto\nnombre\n  Field required")
+def test_instanciacionContacto_soloRequeridos_ok():
+    contacto = Contacto(id=1, nombre="Juan Perez")
+    assert contacto.id == 1
+    assert contacto.nombre == "Juan Perez"
+    assert contacto.direccion is None
+    assert contacto.telefonos is None
+    assert contacto.fecha_nac is None
 
 # endregion

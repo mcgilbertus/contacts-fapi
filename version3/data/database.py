@@ -1,10 +1,12 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 DB_CONNECTION = "mssql+pymssql://localhost/pycontacts"
 DB_TEST_CONNECTION = "mssql+pymssql://localhost/pycontactstest"
 
-Base = declarative_base()
+
+class OrmBase(DeclarativeBase):
+    pass
 
 
 class Database():
@@ -16,10 +18,10 @@ class Database():
         return sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def create_all(self):
-        Base.metadata.create_all(bind=self.engine)
+        OrmBase.metadata.create_all(bind=self.engine)
 
     def drop_all(self):
-        Base.metadata.drop_all(bind=self.engine)
+        OrmBase.metadata.drop_all(bind=self.engine)
 
     def get_db(self):
         db = self.SessionLocal()

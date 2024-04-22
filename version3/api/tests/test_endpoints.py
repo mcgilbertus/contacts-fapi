@@ -1,9 +1,9 @@
 import pytest
 
-from data.entities.modelos_bd import ContactoBd
+from api.model.contacto_modelos import ContactoModel
 from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
-from domain.model.contactos import Contacto
+from domain.model.contacto import Contacto
 # es necesario importar db_test aunque no se use, para que se registre como fixture
 from fixtures_api import test_client, datos_test, db_test
 
@@ -100,16 +100,15 @@ def test_borrar_idIncorrecto_devuelve404(test_client, datos_test):
 
 # region helper functions
 
-def busca_contacto_y_compara(datos_test:list[ContactoBd], datos: dict) -> bool:
-    # crea una instancia de Contacto con los datos recibidos, para que Pydantic adapte los valores
-    # a los tipos correctos
-    cto_recibido = Contacto(**{k: v for k, v in datos.items() if v is not None})
+def busca_contacto_y_compara(datos_test:list[Contacto], datos: dict) -> bool:
+    # crea una instancia de ContactoModel con los datos recibidos, para que Pydantic adapte
+    #  los valores (que salen como string en el json) a los tipos correctos
+    cto_recibido = ContactoModel(**{k: v for k, v in datos.items() if v is not None})
     # busca el contacto almacenado con el mismo id
     cto_almacenado = next((x for x in datos_test if x.id == cto_recibido.id), None)
     # compara los dos contactos propiedad por propiedad y devuelve true si no hay diferencias
-    orig_values = cto_almacenado.__dict__
-    for k, v in cto_recibido.model_dump(exclude_none=True).items():
-        if orig_values[k] != v:
+    for k, v in cto_recibido.model_dump(exclude_unset=True).items():
+        if getattr(cto_almacenado, k) != v:
             return False
     return True
 
