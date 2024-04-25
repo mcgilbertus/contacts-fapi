@@ -20,11 +20,12 @@ def db_test():
 def inicializa_datos(db):
     """
     Agrega datos iniciales
+    OJO los ids son automáticos. Las pruebas asumen que se toman los valores 1, 2, 3
+    porque la BD fue recreada completamente
     """
-    db.begin()
-    db.add(Contacto(id=1, nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
-    db.add(Contacto(id=2, nombre='Contacto2', direccion='dir2'))
-    db.add(Contacto(id=3, nombre='Contacto3'))
-    db.commit()
-    # inicializa y devuelve una instancia del repositorio
-    return ContactosRepo()
+    repository = ContactosRepo()
+    repository.agregar(db, Contacto(id=1, nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
+    repository.agregar(db, Contacto(id=2, nombre='Contacto2', direccion='dir2'))
+    repository.agregar(db, Contacto(id=3, nombre='Contacto3'))
+
+    return repository
