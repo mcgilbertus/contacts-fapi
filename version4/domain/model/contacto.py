@@ -1,3 +1,4 @@
+# domain.model.contacto.py
 from sqlalchemy import Column, Integer, String, Date
 
 from data.database import OrmBase
