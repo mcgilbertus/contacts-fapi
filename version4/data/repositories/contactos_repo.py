@@ -34,7 +34,6 @@ class ContactosRepo:
         """
         Agrega un nuevo contacto a la lista
         :param data: ContactoSinId. Datos del contacto a agregar. El id se asignará automáticamente
-          usando el método get_next_id
         :return: Contacto. El contacto agregado, con el id asignado
         """
         db.add(datos)

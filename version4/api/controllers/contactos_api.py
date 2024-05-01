@@ -9,7 +9,7 @@ from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
 
-contactos_router = APIRouter(prefix='/contactos')
+contactos_router = APIRouter(prefix='/contactos', tags=['Contactos'])
 repo = ContactosRepo()
 
 

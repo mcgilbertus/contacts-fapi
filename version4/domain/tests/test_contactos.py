@@ -3,7 +3,7 @@ import datetime
 from domain.model.contacto import Contacto
 
 
-# region validaciones
+# region instanciacion
 
 def test_instanciacionContacto_valoresCorrectos_ok():
     contacto = Contacto(id=1, nombre="Juan Perez", direccion="Cucha Cucha 123",

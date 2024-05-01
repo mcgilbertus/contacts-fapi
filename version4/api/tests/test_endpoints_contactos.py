@@ -5,36 +5,36 @@ from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
 # es necesario importar db_test aunque no se use, para que se registre como fixture
-from fixtures_api import test_client, datos_test, db_test
+from fixtures_api import test_client, datos_contactos, db_test
 
 
 # region endpoints
-def test_getAll_devuelveLista(test_client, datos_test):
+def test_getAll_devuelveLista(test_client, datos_contactos):
     response = test_client.get("/contactos")
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 3
     # verifica que se recibieron todos los contactos almacenados, con los mismos valores
     for i, c in enumerate(data):
-        assert busca_contacto_y_compara(datos_test, c)
+        assert busca_contacto_y_compara(datos_contactos, c)
 
 
-def test_getContacto_idCorrecto_devuelveContacto(test_client, datos_test):
+def test_getContacto_idCorrecto_devuelveContacto(test_client, datos_contactos):
     id = 2
     response = test_client.get(f"/contactos/{id}")
     assert response.status_code == 200
     # obtiene un diccionario con los datos recibidos en json
     data = response.json()
-    assert busca_contacto_y_compara(datos_test, data)
+    assert busca_contacto_y_compara(datos_contactos, data)
 
 
-def test_getContacto_idIncorrecto_devuelve404(test_client, datos_test):
+def test_getContacto_idIncorrecto_devuelve404(test_client, datos_contactos):
     id = 99
     response = test_client.get(f"/contactos/{id}")
     assert response.status_code == 404
 
 
-def test_agregarContacto_todoBien_devuelveContacto(test_client, datos_test):
+def test_agregarContacto_todoBien_devuelveContacto(test_client, datos_contactos):
     payload = {'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'}
     response = test_client.post('/contactos', json=payload)
     assert response.status_code == 201
@@ -44,7 +44,7 @@ def test_agregarContacto_todoBien_devuelveContacto(test_client, datos_test):
     assert data['id'] is not None
 
 
-def test_agregarContacto_validationErrors_return422(test_client, datos_test):
+def test_agregarContacto_validationErrors_return422(test_client, datos_contactos):
     payload = {'direccion': 'nueva direccion', 'fecha_nac': 'esto no es una fecha!'}
     response = test_client.post('/contactos', json=payload)
     # FastAPI returns code 422 on validation errors
@@ -58,15 +58,15 @@ def test_agregarContacto_validationErrors_return422(test_client, datos_test):
                                        'invalid character in year')
 
 
-def test_editarContacto_todoBien_devuelveContacto(test_client, datos_test):
+def test_editarContacto_todoBien_devuelveContacto(test_client, datos_contactos):
     payload = {'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'}
     response = test_client.put('/contactos/1', json=payload)
     assert response.status_code == 200
     data = response.json()
-    assert busca_contacto_y_compara(datos_test, data)
+    assert busca_contacto_y_compara(datos_contactos, data)
 
 
-def test_editarContacto_validationErrors_return422(test_client, datos_test):
+def test_editarContacto_validationErrors_return422(test_client, datos_contactos):
     payload = {'direccion': 'nueva direccion', 'fecha_nac': 'esto no es una fecha!'}
     response = test_client.put('/contactos/1', json=payload)
     # FastAPI returns code 422 on validation errors
@@ -80,7 +80,7 @@ def test_editarContacto_validationErrors_return422(test_client, datos_test):
                                        'invalid character in year')
 
 
-def test_borrar_idCorrecto_devuelve204(test_client, datos_test, db):
+def test_borrar_idCorrecto_devuelve204(test_client, datos_contactos, db):
     id = 1
     response = test_client.delete(f"/contactos/{id}")
     assert response.status_code == 204 
@@ -90,7 +90,7 @@ def test_borrar_idCorrecto_devuelve204(test_client, datos_test, db):
         repo.get_by_id(db, 1)
 
 
-def test_borrar_idIncorrecto_devuelve404(test_client, datos_test):
+def test_borrar_idIncorrecto_devuelve404(test_client, datos_contactos):
     id = 99
     response = test_client.delete(f"/contactos/{id}")
     assert response.status_code == 404
@@ -100,12 +100,12 @@ def test_borrar_idIncorrecto_devuelve404(test_client, datos_test):
 
 # region helper functions
 
-def busca_contacto_y_compara(datos_test:list[Contacto], datos: dict) -> bool:
+def busca_contacto_y_compara(datos_contactos:list[Contacto], datos: dict) -> bool:
     # crea una instancia de ContactoModel con los datos recibidos, para que Pydantic adapte
     #  los valores (que salen como string en el json) a los tipos correctos
     cto_recibido = ContactoModel(**{k: v for k, v in datos.items() if v is not None})
     # busca el contacto almacenado con el mismo id
-    cto_almacenado = next((x for x in datos_test if x.id == cto_recibido.id), None)
+    cto_almacenado = next((x for x in datos_contactos if x.id == cto_recibido.id), None)
     # compara los dos contactos propiedad por propiedad y devuelve true si no hay diferencias
     for k, v in cto_recibido.model_dump(exclude_unset=True).items():
         if getattr(cto_almacenado, k) != v:
