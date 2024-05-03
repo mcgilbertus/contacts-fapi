@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.localidad import Localidad
 from domain.model.provincia import Provincia
-from sqlalchemy.orm import aliased
+
 
 class LocalidadesRepo:
     """
@@ -18,7 +18,7 @@ class LocalidadesRepo:
         :return: list[Row]. Lista de los campos de localidad mas el nombre de la provincia
         """
         result = db.execute(select(Localidad.id, Localidad.nombre, Provincia.nombre.label('provincia'))
-                            .join(Provincia, Provincia.id==Localidad.provincia_id, isouter=True)).all()
+                            .join(Provincia, Provincia.id == Localidad.provincia_id, isouter=True)).all()
         return result
 
     def get_by_id(self, db: Session, id: int) -> Localidad:

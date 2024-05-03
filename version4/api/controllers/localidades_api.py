@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status, Response
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from api.model.localidad_modelos import LocalidadListModel, LocalidadDetailModel, LocalidadCreateModel, LocalidadUpdateModel, \
@@ -28,16 +29,23 @@ def get_by_id(id: int, db: Session = Depends(db_instance.get_db)):
     except NotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Localidad no encontrada")
 
+
 @localidades_router.get('/provincia/{prov_id}', response_model=List[LocalidadSinProvinciaModel])
-def get_by_prov(prov_id: int, db: Session=Depends(db_instance.get_db)):
+def get_by_prov(prov_id: int, db: Session = Depends(db_instance.get_db)):
     result = repo.get_all_locs_of_prov(db, prov_id)
     return result
 
+
 @localidades_router.post('/', response_model=LocalidadDetailModel, status_code=status.HTTP_201_CREATED)
 def agregar(data: LocalidadCreateModel, db: Session = Depends(db_instance.get_db)):
-    localidad = Localidad(**data.model_dump(exclude_unset=True))
-    c = repo.agregar(db, localidad)
-    return c
+    try:
+        localidad = Localidad(**data.model_dump(exclude_unset=True))
+        c = repo.agregar(db, localidad)
+        return c
+    except IntegrityError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Error {e.orig.args[0]}: {e.orig.args[1]}")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error interno")
 
 
 @localidades_router.put('/{id}', response_model=LocalidadDetailModel)

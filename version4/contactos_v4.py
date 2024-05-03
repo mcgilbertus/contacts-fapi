@@ -1,6 +1,7 @@
+import pymssql
 import uvicorn
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse, JSONResponse
 
 # importamos el modulo para que sqlalchemy tenga registrados los modelos al crear las tablas
 from api.controllers.contactos_api import contactos_router

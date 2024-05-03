@@ -48,3 +48,16 @@ def datos_provincias(db) -> list[Provincia]:
     db.add_all(provincias)
     db.commit()
     return provincias
+
+
+@pytest.fixture(scope='function')
+def datos_localidades(db) -> list[Localidad]:
+    localidades = [
+        Localidad(id=1, nombre='Loc1', provincia_id=1),
+        Localidad(id=2, nombre='Loc2', provincia_id=1),
+        Localidad(id=3, nombre='Loc3')
+    ]
+
+    db.add_all(localidades)
+    db.commit()
+    return localidades

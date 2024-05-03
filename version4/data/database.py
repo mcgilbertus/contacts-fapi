@@ -31,6 +31,7 @@ class Database():
             db.close()
 
 
+
 # by default, creates the 'prod' database instance
 db_instance = Database()
 
