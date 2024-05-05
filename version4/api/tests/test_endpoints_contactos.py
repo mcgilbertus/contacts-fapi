@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytest
 
-from api.model.contacto_modelos import ContactoDetailModel, ContactoListModel
 from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
@@ -22,12 +21,12 @@ def test_getAll_devuelveLista(test_client, datos_contactos):
         cto = next((x for x in datos_contactos if x.id == c['id']), None)
         assert cto is not None
         assert c['nombre'] == cto.nombre
-        assert c.get('telefonos',None) == cto.telefonos
-        if c.get('fecha_nac',None) is not None:
+        assert c.get('telefonos', None) == cto.telefonos
+        if c.get('fecha_nac', None) is not None:
             assert datetime.strptime(c['fecha_nac'], '%Y-%m-%d').date() == cto.fecha_nac
         else:
             assert cto.fecha_nac is None
-        assert c.get('direccion',None) == direccion_str(cto.direccion)
+        assert c.get('direccion', None) == direccion_str(cto.direccion)
 
 
 def test_getContacto_idCorrecto_devuelveContacto(test_client, datos_contactos):
@@ -46,7 +45,7 @@ def test_getContacto_idIncorrecto_devuelve404(test_client, datos_contactos):
 
 
 def test_agregarContacto_todoBien_devuelveContacto(test_client, datos_contactos):
-    payload = {'nombre': 'nuevo contacto', 'direccion': {'calle':'nueva direccion'}}
+    payload = {'nombre': 'nuevo contacto', 'direccion': {'calle': 'nueva direccion'}}
     response = test_client.post('/contactos', json=payload)
     assert response.status_code == 201
     data = response.json()
@@ -56,7 +55,7 @@ def test_agregarContacto_todoBien_devuelveContacto(test_client, datos_contactos)
 
 
 def test_agregarContacto_validationErrors_return422(test_client, datos_contactos):
-    payload = {'direccion': {'calle':'nueva direccion'}, 'fecha_nac': 'esto no es una fecha!'}
+    payload = {'direccion': {'calle': 'nueva direccion'}, 'fecha_nac': 'esto no es una fecha!'}
     response = test_client.post('/contactos', json=payload)
     # FastAPI returns code 422 on validation errors
     assert response.status_code == 422
@@ -70,7 +69,7 @@ def test_agregarContacto_validationErrors_return422(test_client, datos_contactos
 
 
 def test_editarContacto_todoBien_devuelveContacto(test_client, datos_contactos):
-    payload = {'nombre': 'nuevo contacto', 'direccion': {'calle':'nueva direccion'}}
+    payload = {'nombre': 'nuevo contacto', 'direccion': {'calle': 'nueva direccion'}}
     response = test_client.put('/contactos/1', json=payload)
     assert response.status_code == 200
     data = response.json()
@@ -78,7 +77,7 @@ def test_editarContacto_todoBien_devuelveContacto(test_client, datos_contactos):
 
 
 def test_editarContacto_validationErrors_return422(test_client, datos_contactos):
-    payload = {'direccion': {'calle':'nueva direccion'}, 'fecha_nac': 'esto no es una fecha!'}
+    payload = {'direccion': {'calle': 'nueva direccion'}, 'fecha_nac': 'esto no es una fecha!'}
     response = test_client.put('/contactos/1', json=payload)
     # FastAPI returns code 422 on validation errors
     assert response.status_code == 422
@@ -121,7 +120,7 @@ def busca_contacto_y_compara(datos_contactos: list[Contacto], datos: dict) -> bo
     cto_recibido = Contacto(**{k: v for k, v in datos.items() if v is not None})
     cto_recibido.direccion = direccion
 
-    for k,v in {k:v for k,v in cto_recibido.__dict__.items() if not k.startswith('_')}.items():
+    for k, v in {k: v for k, v in cto_recibido.__dict__.items() if not k.startswith('_')}.items():
         if getattr(cto_almacenado, k) != v:
             return False
     return True
