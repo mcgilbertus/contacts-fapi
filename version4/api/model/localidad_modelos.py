@@ -34,3 +34,5 @@ class LocalidadDetailModel(BaseModel):
 class LocalidadResponseModel(BaseModel):
     id: int
     nombre: str
+
+    model_config = ConfigDict(from_attributes=True)

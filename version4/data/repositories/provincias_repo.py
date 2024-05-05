@@ -2,6 +2,7 @@ from sqlalchemy import select, Sequence
 from sqlalchemy.orm import Session
 
 from domain.exceptions.NotFound import NotFoundError
+from domain.model.localidad import Localidad
 from domain.model.provincia import Provincia
 
 
@@ -61,6 +62,10 @@ class ProvinciasRepo:
         cto = self.get_by_id(db, id)
         db.delete(cto)
         db.commit()
+
+    def get_localidades_de_provincia(self, db: Session, prov_id: int) -> Sequence[Localidad]:
+        result = db.scalars(select(Localidad).where(Localidad.provincia_id == prov_id)).all()
+        return result
 
     # endregion
 
