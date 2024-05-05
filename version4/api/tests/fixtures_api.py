@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from contactos_v4 import app
 from data.database import create_db_test_instance, db_instance
 from domain.model.contacto import Contacto
+from domain.model.direccion import Direccion
 from domain.model.localidad import Localidad
 from domain.model.provincia import Provincia
 
@@ -28,8 +29,10 @@ def db_test() -> Session:
 @pytest.fixture(scope='function')
 def datos_contactos(db) -> list[Contacto]:
     contactos = [
-        Contacto(id=1, nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)),
-        Contacto(id=2, nombre='Contacto2', direccion='dir2'),
+        Contacto(id=1, nombre='Contacto1', direccion=Direccion(calle="Cucha Cucha", numero=123),
+                 telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)),
+        Contacto(id=2, nombre='Contacto2', direccion=Direccion(calle="calle cto 2", numero=456,
+                                                               piso=1, depto='A')),
         Contacto(id=3, nombre='Contacto3')
     ]
     db.add_all(contactos)

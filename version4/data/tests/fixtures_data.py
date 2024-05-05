@@ -7,6 +7,7 @@ from data.repositories.contactos_repo import ContactosRepo
 from data.repositories.localidades_repo import LocalidadesRepo
 from data.repositories.provincias_repo import ProvinciasRepo
 from domain.model.contacto import Contacto
+from domain.model.direccion import Direccion
 from domain.model.localidad import Localidad
 from domain.model.provincia import Provincia
 
@@ -25,8 +26,10 @@ def inicializa_datos_contacto(db):
     """
     Agrega datos iniciales
     """
-    db.add(Contacto(id=1, nombre='Contacto1', direccion='dir1', telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
-    db.add(Contacto(id=2, nombre='Contacto2', direccion='dir2'))
+    db.add(Contacto(id=1, nombre='Contacto1', direccion=Direccion(calle="Cucha Cucha", numero=123),
+                    telefonos='tel1', fecha_nac=datetime.date(1999, 8, 23)))
+    db.add(Contacto(id=2, nombre='Contacto2', direccion=Direccion(calle="calle cto 2", numero=456,
+                                                                  piso=1, depto='A')))
     db.add(Contacto(id=3, nombre='Contacto3'))
     db.commit()
     return ContactosRepo()
