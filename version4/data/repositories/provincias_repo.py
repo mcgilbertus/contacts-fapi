@@ -63,10 +63,6 @@ class ProvinciasRepo:
         db.delete(cto)
         db.commit()
 
-    def get_localidades_de_provincia(self, db: Session, prov_id: int) -> Sequence[Localidad]:
-        result = db.scalars(select(Localidad).where(Localidad.provincia_id == prov_id)).all()
-        return result
-
     # endregion
 
     # region otros metodos

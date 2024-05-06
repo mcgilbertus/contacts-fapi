@@ -34,19 +34,6 @@ def test_getProvincia_idIncorrecto_devuelve404(test_client, datos_provincias):
     assert response.status_code == 404
 
 
-def test_getLocalidadesDeProvincia_idCorrecto_devuelveLista(test_client, datos_provincias, datos_localidades):
-    idProvincia = 1
-    response = test_client.get(f"/provincias/{idProvincia}/localidades")
-    assert response.status_code == 200
-    data = response.json()
-    assert len(data) == 2
-    for i, c in enumerate(data):
-        almacenado = next((x for x in datos_localidades if x.id == c['id']), None)
-        assert almacenado is not None
-        assert almacenado.nombre == c['nombre']
-        assert almacenado.provincia_id == idProvincia
-
-
 def test_agregarProvincia_todoBien_devuelveProvincia(test_client, datos_provincias):
     payload = {'nombre': 'mi provincia', 'pais': 'mi pais'}
     response = test_client.post('/provincias', json=payload)

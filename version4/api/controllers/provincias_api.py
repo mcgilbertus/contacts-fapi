@@ -28,11 +28,6 @@ def get_by_id(id: int, db: Session = Depends(db_instance.get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Provincia no encontrada")
 
 
-@provincias_router.get('/{prov_id}/localidades', response_model=List[LocalidadResponseModel])
-def get_localidades_de_provincia(prov_id: int, db: Session = Depends(db_instance.get_db)):
-    result = repo.get_localidades_de_provincia(db, prov_id)
-    return result
-
 @provincias_router.post('/', response_model=ProvinciaDetailModel, status_code=status.HTTP_201_CREATED)
 def agregar(data: ProvinciaUpdateModel, db: Session = Depends(db_instance.get_db)):
     provincia = Provincia(**data.model_dump(exclude_unset=True))

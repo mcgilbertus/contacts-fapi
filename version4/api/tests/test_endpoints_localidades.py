@@ -1,12 +1,10 @@
 import pytest
 from pydantic import BaseModel
 
-from api.model.localidad_modelos import LocalidadDetailModel, LocalidadListModel
+# es necesario importar db_test aunque no se use, para que se registre como fixture
+from fixtures_api import db_test, test_client, datos_provincias, datos_localidades
 from data.repositories.localidades_repo import LocalidadesRepo
 from domain.exceptions.NotFound import NotFoundError
-from domain.model.localidad import Localidad
-# es necesario importar db_test aunque no se use, para que se registre como fixture
-from fixtures_api import test_client, db_test, datos_provincias, datos_localidades
 
 
 # region GET
@@ -47,7 +45,7 @@ def test_getLocalidad_idIncorrecto_devuelve404(test_client):
 
 def test_getLocalidadesDeProvincia_idCorrecto_devuelveLista(test_client, datos_provincias, datos_localidades):
     idProvincia = 1
-    response = test_client.get(f"/localidades/provincia/{idProvincia}")
+    response = test_client.get(f"/provincias/{idProvincia}/localidades")
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 2
