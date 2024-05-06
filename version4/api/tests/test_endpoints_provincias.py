@@ -1,11 +1,11 @@
 import pytest
 
-from api.model.provincia_modelos import ProvinciaModel
+from api.model.provincia_modelos import ProvinciaDetailModel
 from data.repositories.provincias_repo import ProvinciasRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.provincia import Provincia
 # es necesario importar db_test aunque no se use, para que se registre como fixture
-from fixtures_api import test_client, datos_provincias, db_test
+from fixtures_api import test_client, datos_provincias, db_test, datos_localidades
 
 
 # region endpoints
@@ -99,7 +99,7 @@ def test_borrar_idIncorrecto_devuelve404(test_client, datos_provincias):
 def busca_provincia_y_compara(datos_provincias:list[Provincia], datos: dict) -> bool:
     # crea una instancia de ProvinciaModel con los datos recibidos, para que Pydantic adapte
     #  los valores (que salen como string en el json) a los tipos correctos
-    recibido = ProvinciaModel(**{k: v for k, v in datos.items() if v is not None})
+    recibido = ProvinciaDetailModel(**{k: v for k, v in datos.items() if v is not None})
     # busca el provincia almacenado con el mismo id
     almacenado = next((x for x in datos_provincias if x.id == recibido.id), None)
     # compara los dos provincias propiedad por propiedad y devuelve true si no hay diferencias

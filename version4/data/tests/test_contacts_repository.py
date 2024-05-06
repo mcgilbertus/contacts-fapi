@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from data.repositories.contactos_repo import ContactosRepo
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
+from domain.model.direccion import Direccion
 from fixtures_data import inicializa_datos_contacto as repo, db_test as db
 
 
@@ -14,7 +15,19 @@ def test_getAll_devuelveLista(db: Session, repoContacto: ContactosRepo):
     assert len(data) == 3
     # verifica que se recibieron todos los contactos almacenados, con los mismos valores
     for c in data:
-        assert busca_contacto_y_compara(db, c, repoContacto)
+        cto = repoContacto.get_by_id(db, c.id)
+        assert c.nombre == cto.nombre
+        assert c.telefonos == cto.telefonos
+        assert c.fecha_nac == cto.fecha_nac
+        assert c.calle == cto.direccion.calle
+        assert c.numero == cto.direccion.numero
+        assert c.piso == cto.direccion.piso
+        assert c.depto == cto.direccion.depto
+        if c.localidad is None:
+            assert cto.localidad is None
+        else:
+            assert c.localidad == cto.direccion.localidad.nombre
+
 
 
 # endregion
@@ -34,7 +47,7 @@ def test_getById_idIncorrecto_notFoundError(db: Session, repoContacto: Contactos
 
 # region agregar
 def test_agregar_todoBien_devuelveContacto(db: Session, repoContacto: ContactosRepo):
-    payload = Contacto(nombre= 'nuevo contacto', direccion= 'nueva direccion')
+    payload = Contacto(nombre= 'nuevo contacto', direccion= Direccion(calle= 'nueva direccion', numero=123))
     data = repoContacto.agregar(db, payload)
     assert busca_contacto_y_compara(db, data, repoContacto)
 
@@ -43,7 +56,7 @@ def test_agregar_todoBien_devuelveContacto(db: Session, repoContacto: ContactosR
 
 # region editar
 def test_editar_todoBien_devuelveContacto(db: Session, repoContacto: ContactosRepo):
-    payload = {'nombre': 'nuevo contacto', 'direccion': 'nueva direccion'}
+    payload = {'nombre': 'nuevo contacto', 'direccion': {'calle':'nueva direccion', 'numero': 123}}
     data = repoContacto.editar(db, 1, payload)
     assert busca_contacto_y_compara(db, data, repoContacto)
 

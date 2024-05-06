@@ -1,8 +1,10 @@
-from sqlalchemy import select, Sequence
-from sqlalchemy.orm import Session
+from sqlalchemy import select, Sequence, Row
+from sqlalchemy.orm import Session, aliased
 
 from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
+from domain.model.direccion import Direccion
+from domain.model.localidad import Localidad
 
 
 class ContactosRepo:
@@ -11,12 +13,16 @@ class ContactosRepo:
     """
 
     # region Métodos CRUD
-    def get_all(self, db: Session) -> Sequence[Contacto]:
+    def get_all(self, db: Session) -> Sequence[Row]:
         """
         Devuelve la lista completa de contactos
         :return: list[Contacto]. Lista de contactos
         """
-        return db.scalars(select(Contacto)).all()
+        c = aliased(Contacto, name='c')
+        return db.execute(select(c.id, c.nombre, c.telefonos, c.fecha_nac, c.calle, c.numero,
+                                 c.piso, c.depto, Localidad.nombre.label('localidad'))
+                          .join(Localidad, Localidad.id == c.localidad_id, isouter=True)).all()
+
 
     def get_by_id(self, db: Session, id: int) -> Contacto:
         """
@@ -33,7 +39,7 @@ class ContactosRepo:
     def agregar(self, db: Session, datos: Contacto) -> Contacto:
         """
         Agrega un nuevo contacto a la lista
-        :param data: ContactoSinId. Datos del contacto a agregar. El id se asignará automáticamente
+        :param data: Contacto. Datos del contacto a agregar. El id se asignará automáticamente
         :return: Contacto. El contacto agregado, con el id asignado
         """
         db.add(datos)
@@ -48,6 +54,9 @@ class ContactosRepo:
         :return: Contacto. El contacto actualizado
         """
         cto = self.get_by_id(db, id)
+        # actualiza todos los campos del contacto
+        dir = Direccion(**(datos.pop('direccion', {}) or {}))
+        datos['direccion'] = dir
         for k, v in datos.items():
             setattr(cto, k, v)
         db.commit()

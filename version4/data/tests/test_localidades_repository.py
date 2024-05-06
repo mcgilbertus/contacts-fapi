@@ -14,7 +14,13 @@ def test_getAll_devuelveLista(db: Session, repoLocalidad: LocalidadesRepo):
     assert len(data) == 3
     # verifica que se recibieron todos los localidades almacenados, con los mismos valores
     for c in data:
-        assert busca_localidad_y_compara(db, c, repoLocalidad)
+        cto_almacenado = repoLocalidad.get_by_id(db, c.id)
+        assert c.nombre == cto_almacenado.nombre
+        if c.provincia is None:
+            assert cto_almacenado.provincia == None
+        else:
+            assert c.provincia == cto_almacenado.provincia.nombre
+
 
 
 # endregion

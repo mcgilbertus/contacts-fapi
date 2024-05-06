@@ -1,15 +1,13 @@
 import pytest
 from pydantic import BaseModel
 
-from api.model.localidad_modelos import LocalidadDetailModel, LocalidadListModel
+# es necesario importar db_test aunque no se use, para que se registre como fixture
+from fixtures_api import db_test, test_client, datos_provincias, datos_localidades
 from data.repositories.localidades_repo import LocalidadesRepo
 from domain.exceptions.NotFound import NotFoundError
-from domain.model.localidad import Localidad
-# es necesario importar db_test aunque no se use, para que se registre como fixture
-from fixtures_api import test_client, db_test, datos_provincias, datos_localidades
 
 
-# region endpoints
+# region GET
 def test_getAll_devuelveLista(test_client, datos_provincias, datos_localidades):
     response = test_client.get("/localidades")
     assert response.status_code == 200
@@ -45,6 +43,21 @@ def test_getLocalidad_idIncorrecto_devuelve404(test_client):
     assert response.status_code == 404
 
 
+def test_getLocalidadesDeProvincia_idCorrecto_devuelveLista(test_client, datos_provincias, datos_localidades):
+    idProvincia = 1
+    response = test_client.get(f"/provincias/{idProvincia}/localidades")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2
+    for i, c in enumerate(data):
+        almacenado = next((x for x in datos_localidades if x.id == c['id']), None)
+        assert almacenado is not None
+        assert almacenado.nombre == c['nombre']
+        assert almacenado.provincia_id == idProvincia
+
+# endregion
+
+# region POST
 def test_agregarLocalidad_todoBien_devuelveLocalidad(test_client, datos_provincias, datos_localidades):
     payload = {'nombre': 'mi localidad', 'provincia_id': 1}
     response = test_client.post('/localidades', json=payload)
@@ -74,8 +87,9 @@ def test_agregarLocalidad_provinciaInexistente_return422(test_client, datos_prov
     assert response.status_code == 409
     error_details = response.json()['detail']
     assert error_details.startswith('Error 547')
+# endregion
 
-
+# region PUT
 def test_editarLocalidad_todoBien_devuelveLocalidad(test_client, datos_provincias, datos_localidades):
     payload = {'nombre': 'mi localidad', 'provincia': 1}
     response = test_client.put('/localidades/1', json=payload)
@@ -97,8 +111,9 @@ def test_editarLocalidad_validationErrors_return422(test_client, datos_provincia
     assert len(error_details) == 1
     assert error_details[0]['loc'][1] == 'nombre'
     assert error_details[0]['msg'] == 'Field required'
+# endregion
 
-
+# region DELETE
 def test_borrar_idCorrecto_devuelve204(test_client, datos_provincias, datos_localidades, db):
     id = 1
     response = test_client.delete(f"/localidades/{id}")

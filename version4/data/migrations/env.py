@@ -18,9 +18,10 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 from data.database import OrmBase
 # import all models to be included in the migration
-from domain.model.contacto import Contacto
 from domain.model.provincia import Provincia
 from domain.model.localidad import Localidad
+from domain.model.direccion import Direccion
+from domain.model.contacto import Contacto
 
 target_metadata = OrmBase.metadata
 # c = Contacto()

@@ -2,6 +2,7 @@ from sqlalchemy import select, Sequence
 from sqlalchemy.orm import Session
 
 from domain.exceptions.NotFound import NotFoundError
+from domain.model.localidad import Localidad
 from domain.model.provincia import Provincia
 
 

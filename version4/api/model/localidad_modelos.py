@@ -2,6 +2,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 
+from api.model.provincia_modelos import ProvinciaDetailModel
+
 
 class LocalidadUpdateModel(BaseModel):
     nombre: str = Field(..., description='Nombre de la localidad', max_length=80)
@@ -12,20 +14,10 @@ class LocalidadCreateModel(LocalidadUpdateModel):
     pass
 
 
-class ProvinciaResponseModel(BaseModel):
-    id: int
-    nombre: str
-    pais: Optional[str]
-
-
-class NombreProvinciaModel(BaseModel):
-    nombre: str
-
-
 class LocalidadListModel(BaseModel):
     id: int
     nombre: str
-    provincia: str|None
+    provincia: str | None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -33,11 +25,14 @@ class LocalidadListModel(BaseModel):
 class LocalidadDetailModel(BaseModel):
     id: int
     nombre: str
-    provincia: Optional[ProvinciaResponseModel]
+    provincia: Optional[ProvinciaDetailModel]
 
     model_config = ConfigDict(from_attributes=True)
 
 
-class LocalidadSinProvinciaModel(BaseModel):
+# Modelo para usar como parte de otro (embebido)
+class LocalidadResponseModel(BaseModel):
     id: int
     nombre: str
+
+    model_config = ConfigDict(from_attributes=True)
