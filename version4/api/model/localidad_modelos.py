@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 
-from api.model.provincia_modelos import ProvinciaDetailModel
+from api.model.provincia_modelos import ProvinciaResponseModel
 
 
 class LocalidadUpdateModel(BaseModel):
@@ -25,7 +25,7 @@ class LocalidadListModel(BaseModel):
 class LocalidadDetailModel(BaseModel):
     id: int
     nombre: str
-    provincia: Optional[ProvinciaDetailModel]
+    provincia: Optional[ProvinciaResponseModel]
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -18,7 +18,7 @@ class LocalidadesRepo:
         :return: list[Row]. Lista de los campos de localidad mas el nombre de la provincia
         """
         result = db.execute(select(Localidad.id, Localidad.nombre, Provincia.nombre.label('provincia'))
-                            .join(Provincia, Provincia.id == Localidad.provincia_id, isouter=True)).all()
+                            .outerjoin(Provincia, Localidad.provincia_id == Provincia.id)).all()
         return result
 
     def get_by_id(self, db: Session, id: int) -> Localidad:

@@ -1,3 +1,5 @@
+# provincia.py
+
 from sqlalchemy import Column, Integer, String
 
 from data.database import OrmBase

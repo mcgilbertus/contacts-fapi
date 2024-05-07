@@ -1,4 +1,5 @@
-# domain.model.contacto.py
+# contacto.py
+
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import composite, relationship
