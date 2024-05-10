@@ -19,14 +19,11 @@ def test_getAll_devuelveLista(db: Session, repoContacto: ContactosRepo):
         assert c.nombre == cto.nombre
         assert c.telefonos == cto.telefonos
         assert c.fecha_nac == cto.fecha_nac
-        assert c.calle == cto.direccion.calle
-        assert c.numero == cto.direccion.numero
-        assert c.piso == cto.direccion.piso
-        assert c.depto == cto.direccion.depto
+        assert c.dir == cto.direccion
         if c.localidad is None:
             assert cto.localidad is None
         else:
-            assert c.localidad == cto.direccion.localidad.nombre
+            assert cto.localidad == c.localidad.nombre
 
 
 

@@ -7,7 +7,8 @@ from api.model.provincia_modelos import ProvinciaResponseModel
 
 class LocalidadUpdateModel(BaseModel):
     nombre: str = Field(..., description='Nombre de la localidad', max_length=80)
-    provincia_id: Optional[int] = Field(default=None, description='Id de la provincia a la que pertenece la localidad')
+    provincia_id: Optional[int] = Field(default=None, description='Id de la provincia a la que '
+                                                                  'pertenece la localidad')
 
 
 class LocalidadCreateModel(LocalidadUpdateModel):

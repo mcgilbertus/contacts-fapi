@@ -19,10 +19,10 @@ class ContactosRepo:
         :return: list[Contacto]. Lista de contactos
         """
         c = aliased(Contacto, name='c')
-        return db.execute(select(c.id, c.nombre, c.telefonos, c.fecha_nac, c.calle, c.numero,
-                                 c.piso, c.depto, Localidad.nombre.label('localidad'))
-                          .join(Localidad, Localidad.id == c.localidad_id, isouter=True)).all()
-
+        result = (db.execute(select(c.id, c.nombre, c.telefonos, c.fecha_nac, c.direccion.label('dir'), Localidad.nombre.label('localidad'))
+                            .outerjoin(Localidad))
+                  .all())
+        return result
 
     def get_by_id(self, db: Session, id: int) -> Contacto:
         """

@@ -30,21 +30,24 @@ def get_by_id(id: int, db: Session = Depends(db_instance.get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Localidad no encontrada")
 
 
-@localidades_router.get('/provincias/{prov_id}/localidades', response_model=List[LocalidadResponseModel],
+@localidades_router.get('/provincias/{prov_id}/localidades',
+                        response_model=List[LocalidadDetailModel],
                         summary='Devuelve todas las localidades de una provincia')
 def get_by_prov(prov_id: int, db: Session = Depends(db_instance.get_db)):
     result = repo.get_all_locs_of_prov(db, prov_id)
     return result
 
 
-@localidades_router.post('/localidades', response_model=LocalidadDetailModel, status_code=status.HTTP_201_CREATED)
+@localidades_router.post('/localidades', response_model=LocalidadDetailModel,
+                         status_code=status.HTTP_201_CREATED)
 def agregar(data: LocalidadCreateModel, db: Session = Depends(db_instance.get_db)):
     try:
         localidad = Localidad(**data.model_dump(exclude_unset=True))
         c = repo.agregar(db, localidad)
         return c
     except IntegrityError as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Error {e.orig.args[0]}: {e.orig.args[1]}")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=f"Error {e.orig.args[0]}: {e.orig.args[1]}")
 
 
 @localidades_router.put('/localidades/{id}', response_model=LocalidadDetailModel)
@@ -53,9 +56,11 @@ def editar(id: int, data: LocalidadUpdateModel, db: Session = Depends(db_instanc
         c = repo.editar(db, id, data.model_dump(exclude_unset=True))
         return c
     except IntegrityError as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Error {e.orig.args[0]}: {e.orig.args[1]}")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=f"Error {e.orig.args[0]}: {e.orig.args[1]}")
     except NotFoundError:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Localidad no encontrada")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Localidad no encontrada")
 
 
 @localidades_router.delete('/localidades/{id}', status_code=204, response_class=Response)

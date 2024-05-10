@@ -25,9 +25,12 @@ class LocalidadesRepo:
         """
         Busca una Localidad por id
         :param id: int. El id a buscar
-        :return: Localidad. La Localidad encontrada.
+        :return: Localidad. La Localidad encontrada, incluyendo la provincia a la que pertenece
         """
-        result = db.get(Localidad, id)
+        # obtiene la localidad y la provincia en un solo SELECT
+        result = db.scalars(select(Localidad,Provincia)
+                            .outerjoin(Localidad.provincia)
+                            .where(Localidad.id == id)).first()
         if result is None:
             raise NotFoundError(f'Localidad [{id}] no encontrada')
         return result

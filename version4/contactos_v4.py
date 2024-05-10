@@ -1,3 +1,7 @@
+import json
+import logging
+import pathlib
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
@@ -6,6 +10,15 @@ from data.database import create_db_prod_instance
 from api.controllers.contactos_api import contactos_router
 from api.controllers.localidades_api import localidades_router
 from api.controllers.provincias_api import provincias_router
+
+### logging
+logconfig_file = pathlib.Path('logconfig.json')
+if logconfig_file.exists():
+   with open(logconfig_file) as jsonfile:
+       logconfig_dict = json.load(jsonfile)
+       logging.config.dictConfig(logconfig_dict)
+log = logging.getLogger(__name__)
+
 
 app = FastAPI()
 

@@ -1,8 +1,7 @@
 # contacto.py
 
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
-from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import composite, relationship
+from sqlalchemy.orm import composite, relationship, mapped_column, Mapped
 
 from data.database import OrmBase
 from domain.model.direccion import Direccion
@@ -16,12 +15,10 @@ class Contacto(OrmBase):
     telefonos = Column(String(50))
     fecha_nac = Column(Date)
 
-    # campos para la direccion
-    calle = Column(String(80))
-    numero = Column(Integer)
-    piso = Column(Integer)
-    depto = Column(String(10))
-    localidad_id = Column(Integer, ForeignKey('localidades.id'))
-    direccion = composite(Direccion, calle, numero, piso, depto, localidad_id)
+    direccion: Mapped[Direccion] = composite(mapped_column('calle',String(80)),
+                                             mapped_column('numero', Integer),
+                                             mapped_column('piso', Integer),
+                                             mapped_column('depto', String(10)),
+                                             mapped_column('localidad_id', ForeignKey('localidades.id')))
 
     localidad = relationship('Localidad')

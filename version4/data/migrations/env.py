@@ -24,7 +24,7 @@ from domain.model.direccion import Direccion
 from domain.model.contacto import Contacto
 
 target_metadata = OrmBase.metadata
-# c = Contacto()
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

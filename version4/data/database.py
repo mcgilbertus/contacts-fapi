@@ -11,12 +11,11 @@ class OrmBase(DeclarativeBase):
 
 class Database():
     def __init__(self, connection_string: str = DB_CONNECTION, echo: bool = True):
-        self.engine = create_engine(connection_string, echo=echo)
-        print(f"Database connected to {connection_string}")
+        self.echo = echo
+        self.engine = create_engine(connection_string, echo=self.echo)
 
     def set_connection_string(self, connection_string: str):
-        print(f"Database connected to {connection_string}")
-        self.engine = create_engine(connection_string)
+        self.engine = create_engine(connection_string, echo = self.echo)
 
     @property
     def SessionLocal(self):
