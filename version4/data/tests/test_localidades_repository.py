@@ -38,14 +38,14 @@ def test_getById_idIncorrecto_notFoundError(db: Session, datosLocalidad: Localid
 
 # endregion
 
-# region agregar
+#region agregar
+
 def test_agregar_todoBien_devuelveLocalidad(db: Session, datosLocalidad: LocalidadesRepo):
     payload = Localidad(nombre= 'nuevo localidad', provincia_id= 1)
     data = datosLocalidad.agregar(db, payload)
     assert busca_localidad_y_compara(db, data, datosLocalidad)
 
-
-# end region
+#endregion
 
 # region editar
 def test_editar_todoBien_devuelveLocalidad(db: Session, datosLocalidad: LocalidadesRepo):
@@ -74,12 +74,12 @@ def test_borrar_idIncorrecto_notFoundError(db: Session, datosLocalidad: Localida
 
 # region helper functions
 
-def busca_localidad_y_compara(bd: Session, cto: Localidad, repo: LocalidadesRepo) -> bool:
+def busca_localidad_y_compara(bd: Session, loc: Localidad, repo: LocalidadesRepo) -> bool:
     # busca el localidad almacenado con el mismo id
-    cto_almacenado = repo.get_by_id(bd, cto.id)
+    loc_almacenada = repo.get_by_id(bd, loc.id)
     # compara los dos localidades propiedad por propiedad y devuelve true si no hay diferencias
-    orig_values = cto_almacenado.__dict__
-    for k, v in cto.__dict__.items():
+    orig_values = loc_almacenada.__dict__
+    for k, v in loc.__dict__.items():
         if orig_values[k] != v:
             return False
     return True

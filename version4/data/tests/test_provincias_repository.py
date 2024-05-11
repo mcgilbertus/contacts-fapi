@@ -68,12 +68,12 @@ def test_borrar_idIncorrecto_notFoundError(db: Session, datosProvincia: Provinci
 
 # region helper functions
 
-def busca_provincia_y_compara(bd: Session, cto: Provincia, repo: ProvinciasRepo) -> bool:
+def busca_provincia_y_compara(bd: Session, prv: Provincia, repo: ProvinciasRepo) -> bool:
     # busca el provincia almacenado con el mismo id
-    cto_almacenado = repo.get_by_id(bd, cto.id)
+    prv_almacenada = repo.get_by_id(bd, prv.id)
     # compara los dos provincias propiedad por propiedad y devuelve true si no hay diferencias
-    orig_values = cto_almacenado.__dict__
-    for k, v in cto.__dict__.items():
+    orig_values = prv_almacenada.__dict__
+    for k, v in prv.__dict__.items():
         if orig_values[k] != v:
             return False
     return True
