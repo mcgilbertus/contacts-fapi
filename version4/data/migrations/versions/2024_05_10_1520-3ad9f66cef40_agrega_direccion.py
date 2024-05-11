@@ -1,8 +1,8 @@
 """agrega direccion
 
-Revision ID: 8cdc798e4d77
+Revision ID: 3ad9f66cef40
 Revises: 70cfd3cb4270
-Create Date: 2024-05-03 16:35:30.755273
+Create Date: 2024-05-10 15:20:19.879611
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8cdc798e4d77'
+revision: str = '3ad9f66cef40'
 down_revision: Union[str, None] = '70cfd3cb4270'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

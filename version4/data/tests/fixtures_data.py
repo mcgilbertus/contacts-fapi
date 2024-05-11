@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from data.database import create_db_test_instance, db_instance
+from data.database import connect_to_test, db_instance
 from data.repositories.contactos_repo import ContactosRepo
 from data.repositories.localidades_repo import LocalidadesRepo
 from data.repositories.provincias_repo import ProvinciasRepo
@@ -15,13 +15,13 @@ from domain.model.provincia import Provincia
 @pytest.fixture(scope='function', name='db')
 def db_test():
     """Borra y recrea la base de datos"""
-    create_db_test_instance()
+    connect_to_test()
     db_instance.drop_all()
     db_instance.create_all()
     return next(db_instance.get_db())
 
 
-@pytest.fixture(scope='function', name='repoContacto')
+@pytest.fixture(scope='function', name='datosContacto')
 def inicializa_datos_contacto(db):
     """
     Agrega datos iniciales
@@ -35,7 +35,7 @@ def inicializa_datos_contacto(db):
     return ContactosRepo()
 
 
-@pytest.fixture(scope='function', name='repoProvincia')
+@pytest.fixture(scope='function', name='datosProvincia')
 def inicializa_datos_provincia(db):
     """
     Agrega datos iniciales
@@ -47,7 +47,7 @@ def inicializa_datos_provincia(db):
     return ProvinciasRepo()
 
 
-@pytest.fixture(scope='function', name='repoLocalidad')
+@pytest.fixture(scope='function', name='datosLocalidad')
 def inicializa_datos_localidad(db):
     """
     Agrega datos iniciales

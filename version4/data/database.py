@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-DB_CONNECTION = "mssql+pymssql://localhost/pycontacts"
+DB_PROD_CONNECTION = "mssql+pymssql://localhost/pycontacts"
 DB_TEST_CONNECTION = "mssql+pymssql://localhost/pycontactstest"
 
 
@@ -10,9 +10,9 @@ class OrmBase(DeclarativeBase):
 
 
 class Database():
-    def __init__(self, connection_string: str = DB_CONNECTION, echo: bool = True):
+    def __init__(self, connection_string: str = DB_PROD_CONNECTION, echo: bool = True):
         self.echo = echo
-        self.engine = create_engine(connection_string, echo=self.echo)
+        self.set_connection_string(connection_string)
 
     def set_connection_string(self, connection_string: str):
         self.engine = create_engine(connection_string, echo = self.echo)
@@ -38,11 +38,11 @@ class Database():
 db_instance = Database(DB_TEST_CONNECTION)
 
 
-def create_db_prod_instance(with_echo: bool = True):
+def connect_to_prod(with_echo: bool = True):
     global db_instance
-    db_instance.set_connection_string(DB_CONNECTION)
+    db_instance.set_connection_string(DB_PROD_CONNECTION)
 
 
-def create_db_test_instance(with_echo: bool = True):
+def connect_to_test(with_echo: bool = True):
     global db_instance
     db_instance.set_connection_string(DB_TEST_CONNECTION)

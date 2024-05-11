@@ -29,24 +29,21 @@ class ContactoListModel(BaseModel):
                     result += f' {self.dir.depto}'
         return result
 
-    model_config = ConfigDict(from_attributes=True)
-
-
 # endregion
 
 
 # region Details
 class DireccionDetailModel(BaseModel):
-    calle: Optional[str] = Field(default=None, description='Nombre de la calle', max_length=80)
+    calle: Optional[str] = Field(default=None, description='Nombre de la calle')
     numero: Optional[int] = Field(default=None, description='Número de la calle')
     piso: Optional[int] = Field(default=None, description='Piso del edificio')
-    depto: Optional[str] = Field(default=None, description='Departamento del edificio', max_length=10)
+    depto: Optional[str] = Field(default=None, description='Departamento del edificio')
 
 
 class ContactoDetailModel(BaseModel):
-    id: int = Field(gt=0)
-    nombre: str = Field(..., description='Nombre y apellido del contacto', max_length=80)
-    telefonos: Optional[str] = Field(default=None, description='Todos los números de teléfono del contacto', max_length=50)
+    id: int = Field
+    nombre: str = Field(..., description='Nombre y apellido del contacto')
+    telefonos: Optional[str] = Field(default=None, description='Todos los números de teléfono del contacto')
     fecha_nac: Optional[datetime.date] = Field(default=None, description='Fecha de nacimiento')
     direccion: Optional[DireccionDetailModel] = Field(default=None, description='Dirección del contacto')
     localidad: Optional[LocalidadDetailModel] = Field(default=None, description='Localidad')
@@ -62,8 +59,6 @@ class DireccionUpdateModel(BaseModel):
     depto: Optional[str] = Field(default=None, description='Departamento del edificio', max_length=10)
     localidad_id: Optional[int] = Field(default=None, description='Id de la localidad')
 
-    model_config = ConfigDict(from_attributes=True)
-
 
 class DireccionCreateModel(DireccionUpdateModel):
     pass
@@ -75,15 +70,8 @@ class ContactoUpdateModel(BaseModel):
     fecha_nac: Optional[datetime.date] = Field(default=None, description='Fecha de nacimiento')
     direccion: Optional[DireccionUpdateModel] = Field(default=None, description='Dirección del contacto')
 
-    model_config = ConfigDict(from_attributes=True)
-
 
 class ContactoCreateModel(ContactoUpdateModel):
-    nombre: str = Field(..., description='Nombre y apellido del contacto', max_length=80)
-    telefonos: Optional[str] = Field(default=None, description='Todos los números de teléfono del contacto', max_length=50)
-    fecha_nac: Optional[datetime.date] = Field(default=None, description='Fecha de nacimiento')
-    direccion: Optional[DireccionCreateModel] = Field(default=None, description='Dirección del contacto')
-
-    model_config = ConfigDict(from_attributes=True)
+    pass
 
 # endregion

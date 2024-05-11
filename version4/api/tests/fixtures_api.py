@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from data.database import db_instance, create_db_test_instance
+from data.database import db_instance, connect_to_test
 from contactos_v4 import app
 from domain.model.contacto import Contacto
 from domain.model.direccion import Direccion
@@ -20,6 +20,7 @@ def test_client():
 @pytest.fixture(scope='function', name='db')
 def db_test() -> Session:
     """Borra y recrea la base de datos"""
+    connect_to_test()
     db_instance.drop_all()
     db_instance.create_all()
     return next(db_instance.get_db())

@@ -28,8 +28,6 @@ class LocalidadDetailModel(BaseModel):
     nombre: str
     provincia: Optional[ProvinciaResponseModel]
 
-    model_config = ConfigDict(from_attributes=True)
-
 
 # Modelo para usar como parte de otro (embebido)
 class LocalidadResponseModel(BaseModel):

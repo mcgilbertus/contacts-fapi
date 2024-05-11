@@ -19,9 +19,8 @@ class ContactosRepo:
         :return: list[Contacto]. Lista de contactos
         """
         c = aliased(Contacto, name='c')
-        result = (db.execute(select(c.id, c.nombre, c.telefonos, c.fecha_nac, c.direccion.label('dir'), Localidad.nombre.label('localidad'))
-                            .outerjoin(Localidad))
-                  .all())
+        result = db.execute(select(c.id, c.nombre, c.telefonos, c.fecha_nac, c.direccion.label('dir'), Localidad.nombre.label('localidad'))
+                            .outerjoin(Localidad)).all()
         return result
 
     def get_by_id(self, db: Session, id: int) -> Contacto:
@@ -55,7 +54,8 @@ class ContactosRepo:
         """
         cto = self.get_by_id(db, id)
         # actualiza todos los campos del contacto
-        dir = Direccion(**(datos.pop('direccion', {}) or {}))
+        datos_dir = datos.pop('direccion', {}) or {}
+        dir = Direccion(**datos_dir)
         datos['direccion'] = dir
         for k, v in datos.items():
             setattr(cto, k, v)
