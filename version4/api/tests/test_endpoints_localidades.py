@@ -1,5 +1,4 @@
 import pytest
-from pydantic import BaseModel
 
 # es necesario importar db_test aunque no se use, para que se registre como fixture
 from fixtures_api import db_test, test_client, datos_provincias, datos_localidades
