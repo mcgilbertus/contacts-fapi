@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "formatters": {
+    "contactos_fmt": {
+      "format": "%(asctime)s-%(levelname)s-%(name)s: %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "formatter": "contactos_fmt",
+      "class": "logging.StreamHandler",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "formatter": "contactos_fmt",
+      "class": "logging.handlers.RotatingFileHandler",
+      "filename": "contactos.log",
+      "maxBytes": 10000,
+      "backupCount": 3
+    }
+  },
+  "root": {
+    "handlers": [
+      "console"
+    ],
+    "level": "INFO"
+  },
+  "loggers": {
+    "api": {
+      "handlers": [
+        "file",
+        "console"
+      ],
+      "level": "INFO",
+      "propagate": false
+    },
+    "data": {
+      "handlers": [
+        "file",
+        "console"
+      ],
+      "level": "INFO",
+      "propagate": false
+    },
+    "domain": {
+      "handlers": [
+        "file"
+      ],
+      "level": "INFO",
+      "propagate": false
+    }
+  }
+}
