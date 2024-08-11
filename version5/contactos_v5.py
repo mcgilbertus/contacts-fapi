@@ -25,11 +25,10 @@ app = FastAPI()
 def show_docs():
     return RedirectResponse(url="/docs")
 
-
 app.include_router(logging_router)
-app.include_router(contactos_router_v1, prefix='/v1')
-app.include_router(contactos_router_v2, prefix='/v2')
-app.include_router(contactos_router_v2) # default version
+app.include_router(contactos_router_v2, tags=['Contactos - Ultima versión'])
+app.include_router(contactos_router_v1, prefix='/v1', tags=['Contactos V1'])
+app.include_router(contactos_router_v2, prefix='/v2', tags=['Contactos V2'])
 app.include_router(localidades_router)
 app.include_router(provincias_router)
 

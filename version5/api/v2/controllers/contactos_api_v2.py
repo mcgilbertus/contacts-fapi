@@ -13,7 +13,8 @@ from domain.exceptions.NotFound import NotFoundError
 from domain.model.contacto import Contacto
 from domain.model.direccion import Direccion
 
-contactos_router_v2 = APIRouter(prefix='/contactos', tags=['Contactos'])
+
+contactos_router_v2 = APIRouter(prefix='/contactos')
 repo = ContactosRepo()
 logger = logging.getLogger(__name__)
 
